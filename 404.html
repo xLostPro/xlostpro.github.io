@@ -7,13 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>xLostPro</title>
     <base href="/" />
-    <link href="_framework/dotnet.lu6x93d68u.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-E3pYHuovayqkwNcCWjdbFj5IAMwieWTT1qKBvMvz01Q=" />
+    <link href="_framework/dotnet.f6rbg9k08z.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-qY2sZM46dQaREy04skj1wxnHFUJK+ovWSCWFBNgXQQA=" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link href="xLostProHome.styles.css" rel="stylesheet" />
     <script type="importmap">{
   "imports": {
     "./_framework/blazor.webassembly.js": "./_framework/blazor.webassembly.zxhwjtv6sc.js",
-    "./_framework/dotnet.js": "./_framework/dotnet.lu6x93d68u.js",
+    "./_framework/dotnet.js": "./_framework/dotnet.f6rbg9k08z.js",
     "./_framework/dotnet.native.js": "./_framework/dotnet.native.mx9wzm9o5h.js",
     "./_framework/dotnet.runtime.js": "./_framework/dotnet.runtime.2zl32tp6ah.js"
   },
@@ -21,8 +21,8 @@
   "integrity": {
     "./_framework/blazor.webassembly.js": "sha256-1xlHuu1iNOJiMMz2BCq95uekwHf6pdpTcgVNKVBboPs=",
     "./_framework/blazor.webassembly.zxhwjtv6sc.js": "sha256-1xlHuu1iNOJiMMz2BCq95uekwHf6pdpTcgVNKVBboPs=",
-    "./_framework/dotnet.js": "sha256-E3pYHuovayqkwNcCWjdbFj5IAMwieWTT1qKBvMvz01Q=",
-    "./_framework/dotnet.lu6x93d68u.js": "sha256-E3pYHuovayqkwNcCWjdbFj5IAMwieWTT1qKBvMvz01Q=",
+    "./_framework/dotnet.f6rbg9k08z.js": "sha256-qY2sZM46dQaREy04skj1wxnHFUJK+ovWSCWFBNgXQQA=",
+    "./_framework/dotnet.js": "sha256-qY2sZM46dQaREy04skj1wxnHFUJK+ovWSCWFBNgXQQA=",
     "./_framework/dotnet.native.js": "sha256-tlrn00yvndmJzhFdKpELUlytdgWFyGFdTWjI10bgILU=",
     "./_framework/dotnet.native.mx9wzm9o5h.js": "sha256-tlrn00yvndmJzhFdKpELUlytdgWFyGFdTWjI10bgILU=",
     "./_framework/dotnet.runtime.2zl32tp6ah.js": "sha256-/ndm/PF1BeBT5mXzYAES79wNK5sIZIQKAGcUqPL9ZP8=",
@@ -69,6 +69,18 @@
             el.selectionStart = start + openTag.length;
             el.selectionEnd = start + openTag.length + selectedText.length;
             return el.value;
+        };
+    </script>
+
+    <script>
+        window.setupEscapeKey = (dotNetHelper) => {
+            const handler = (e) => {
+                if (e.key === 'Escape') {
+                    dotNetHelper.invokeMethodAsync('CloseFullscreen');
+                    window.removeEventListener('keydown', handler);
+                }
+            };
+            window.addEventListener('keydown', handler);
         };
     </script>
 </body>
