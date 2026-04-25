@@ -1,0 +1,41 @@
+﻿:root { --lp-blue: #2563eb; --lp-bg: #fcfcfc; --lp-text: #0f172a; }
+@media (prefers-color-scheme: dark) {
+    :root { --lp-bg: #020617; --lp-text: #f8fafc; }
+}
+
+.loading-container {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: var(--lp-bg);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999;
+}
+
+.loading-content { text-align: center; width: 280px; }
+
+.loading-logo {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900; font-size: 2rem; letter-spacing: -0.05em;
+    text-transform: uppercase; color: var(--lp-text);
+    margin-bottom: 1.5rem;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.loading-logo span { color: var(--lp-blue); }
+
+.loading-bar-container {
+    width: 100%; height: 2px;
+    background: rgba(0,0,0,0.05);
+    overflow: hidden; border-radius: 10px;
+}
+
+.loading-bar {
+    width: 0%; height: 100%;
+    background-color: var(--lp-blue);
+    /* This transitions the width based on Blazor's download progress */
+    transition: width 0.4s ease;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.98); }
+}

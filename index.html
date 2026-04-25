@@ -2,30 +2,31 @@
 <html lang="en">
 
 <head>
+    <link href="css/loadingbar.css" rel="stylesheet" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>xLostProHome</title>
+    <title>xLostPro</title>
     <base href="/" />
-    <link href="_framework/dotnet.zwcogszf0z.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-nbhJ9hAzG/+a6LwZtrSfwN78nswrc6mh2EzAUjtQyWc=" />
+    <link href="_framework/dotnet.lu6x93d68u.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-E3pYHuovayqkwNcCWjdbFj5IAMwieWTT1qKBvMvz01Q=" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link href="xLostProHome.styles.css" rel="stylesheet" />
     <script type="importmap">{
   "imports": {
     "./_framework/blazor.webassembly.js": "./_framework/blazor.webassembly.zxhwjtv6sc.js",
+    "./_framework/dotnet.js": "./_framework/dotnet.lu6x93d68u.js",
     "./_framework/dotnet.native.js": "./_framework/dotnet.native.mx9wzm9o5h.js",
-    "./_framework/dotnet.runtime.js": "./_framework/dotnet.runtime.2zl32tp6ah.js",
-    "./_framework/dotnet.js": "./_framework/dotnet.zwcogszf0z.js"
+    "./_framework/dotnet.runtime.js": "./_framework/dotnet.runtime.2zl32tp6ah.js"
   },
   "scopes": {},
   "integrity": {
     "./_framework/blazor.webassembly.js": "sha256-1xlHuu1iNOJiMMz2BCq95uekwHf6pdpTcgVNKVBboPs=",
     "./_framework/blazor.webassembly.zxhwjtv6sc.js": "sha256-1xlHuu1iNOJiMMz2BCq95uekwHf6pdpTcgVNKVBboPs=",
-    "./_framework/dotnet.js": "sha256-nbhJ9hAzG/+a6LwZtrSfwN78nswrc6mh2EzAUjtQyWc=",
+    "./_framework/dotnet.js": "sha256-E3pYHuovayqkwNcCWjdbFj5IAMwieWTT1qKBvMvz01Q=",
+    "./_framework/dotnet.lu6x93d68u.js": "sha256-E3pYHuovayqkwNcCWjdbFj5IAMwieWTT1qKBvMvz01Q=",
     "./_framework/dotnet.native.js": "sha256-tlrn00yvndmJzhFdKpELUlytdgWFyGFdTWjI10bgILU=",
     "./_framework/dotnet.native.mx9wzm9o5h.js": "sha256-tlrn00yvndmJzhFdKpELUlytdgWFyGFdTWjI10bgILU=",
     "./_framework/dotnet.runtime.2zl32tp6ah.js": "sha256-/ndm/PF1BeBT5mXzYAES79wNK5sIZIQKAGcUqPL9ZP8=",
-    "./_framework/dotnet.runtime.js": "sha256-/ndm/PF1BeBT5mXzYAES79wNK5sIZIQKAGcUqPL9ZP8=",
-    "./_framework/dotnet.zwcogszf0z.js": "sha256-nbhJ9hAzG/+a6LwZtrSfwN78nswrc6mh2EzAUjtQyWc="
+    "./_framework/dotnet.runtime.js": "sha256-/ndm/PF1BeBT5mXzYAES79wNK5sIZIQKAGcUqPL9ZP8="
   }
 }</script>
     <link href="css/app.css" rel="stylesheet" />
@@ -34,11 +35,15 @@
 
 <body>
     <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
-        <div class="loading-progress-text"></div>
+        <!-- Everything inside here is shown ONLY while the app is loading -->
+        <div class="loading-container">
+            <div class="loading-content">
+                <h1 class="loading-logo">xLost<span>Pro</span></h1>
+                <div class="loading-bar-container">
+                    <div class="loading-bar" id="loading-bar"></div>
+                </div>
+            </div>
+        </div>
     </div>
     
     <script src="_framework/blazor.webassembly.zxhwjtv6sc.js"></script>
