@@ -1,33 +1,29 @@
 ﻿@import "tailwindcss";
 
+@theme {
+    --font-sans: "Inter", ui-sans-serif, system-ui;
+}
+
 @layer base {
-    /* Protect the Nav and Brand from Bootstrap underlines */
-    a, .nav-link, h1, h2 {
-        text-decoration: none !important;
-        box-shadow: none !important;
-    }
-    /* This kills the Bootstrap/Browser focus rectangle globally */
-    *:focus {
-        outline: none !important;
-        box-shadow: none !important;
-    }
-    /* Remove focus outlines for mouse users, keep them for keyboard users if needed */
-    :focus:not(:focus-visible) {
-        outline: none;
-    }
-
-    /* Nuclear option for headings/divs if the above doesn't catch it */
-    h1:focus, div:focus, section:focus {
-        outline: none !important;
-    }
-
     body {
-        @apply antialiased overflow-x-hidden;
-        font-family: 'Inter', sans-serif !important;
+        @apply bg-[#fcfcfc] text-[#0f172a] dark:bg-[#020617] dark:text-[#f8fafc] antialiased overflow-x-hidden;
+        padding: env(safe-area-inset);
     }
 
-    /* Keep the xLostPro brand looking exactly as designed */
-    .tracking-tighter {
-        letter-spacing: -0.05em !important;
+    /* THE HIGH-CONTRAST MOUSE FIX */
+    .dm-wrapper { cursor: default; }
+
+    .dm-wrapper textarea,
+    .dm-wrapper input[type="text"],
+    .dm-wrapper input[type="number"] {
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20"><path d="M5 2h2v16H5z" fill="black" stroke="white" stroke-width="1.5"/></svg>') 6 10, text !important;
+        caret-color: #2563eb !important;
     }
+
+    .dm-wrapper button, .dm-wrapper select, .dm-wrapper label, .dm-wrapper a {
+        cursor: pointer !important;
+    }
+
+    /* Remove default Blazor Focus Rings */
+    *:focus { outline: none !important; }
 }

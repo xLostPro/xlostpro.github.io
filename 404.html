@@ -1,104 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en-GB">
 <head>
-    <link href="css/loadingbar.css" rel="stylesheet" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>xLostPro</title>
     <base href="/" />
-    <link href="_framework/dotnet.m6euyvd2c3.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-ss5g5l7rRc/U/tEWPzeXWyoQOHncIh1ONpT1u69j1yQ=" />
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <link href="xLostProHome.styles.css" rel="stylesheet" />
-    <script type="importmap">{
-  "imports": {
-    "./_framework/blazor.webassembly.js": "./_framework/blazor.webassembly.zxhwjtv6sc.js",
-    "./_framework/dotnet.js": "./_framework/dotnet.m6euyvd2c3.js",
-    "./_framework/dotnet.native.js": "./_framework/dotnet.native.mx9wzm9o5h.js",
-    "./_framework/dotnet.runtime.js": "./_framework/dotnet.runtime.2zl32tp6ah.js"
-  },
-  "scopes": {},
-  "integrity": {
-    "./_framework/blazor.webassembly.js": "sha256-1xlHuu1iNOJiMMz2BCq95uekwHf6pdpTcgVNKVBboPs=",
-    "./_framework/blazor.webassembly.zxhwjtv6sc.js": "sha256-1xlHuu1iNOJiMMz2BCq95uekwHf6pdpTcgVNKVBboPs=",
-    "./_framework/dotnet.js": "sha256-ss5g5l7rRc/U/tEWPzeXWyoQOHncIh1ONpT1u69j1yQ=",
-    "./_framework/dotnet.m6euyvd2c3.js": "sha256-ss5g5l7rRc/U/tEWPzeXWyoQOHncIh1ONpT1u69j1yQ=",
-    "./_framework/dotnet.native.js": "sha256-tlrn00yvndmJzhFdKpELUlytdgWFyGFdTWjI10bgILU=",
-    "./_framework/dotnet.native.mx9wzm9o5h.js": "sha256-tlrn00yvndmJzhFdKpELUlytdgWFyGFdTWjI10bgILU=",
-    "./_framework/dotnet.runtime.2zl32tp6ah.js": "sha256-/ndm/PF1BeBT5mXzYAES79wNK5sIZIQKAGcUqPL9ZP8=",
-    "./_framework/dotnet.runtime.js": "sha256-/ndm/PF1BeBT5mXzYAES79wNK5sIZIQKAGcUqPL9ZP8="
-  }
-}</script>
     <link href="css/app.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --lp-blue: #2563eb; --lp-bg: #fcfcfc; --lp-text: #0f172a; }
+        @media (prefers-color-scheme: dark) { :root { --lp-bg: #020617; --lp-text: #f8fafc; } }
+        .loader-wrapper { position: fixed; inset: 0; background: var(--lp-bg); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .loader-content { text-align: center; }
+        .loader-logo { font-size: 2rem; font-weight: 900; letter-spacing: -0.05em; color: var(--lp-text); text-transform: uppercase; margin-bottom: 1rem; }
+        .loader-logo span { color: var(--lp-blue); }
+        .loader-bar { width: 150px; height: 2px; background: rgba(0,0,0,0.1); margin: 0 auto; position: relative; overflow: hidden; }
+        .loader-progress { position: absolute; left: -100%; width: 100%; height: 100%; background: var(--lp-blue); animation: load 1.5s infinite; }
+        @keyframes load { 100% { left: 100%; } }
+    </style>
 </head>
-
 <body>
-    <div id="app">
-        <!-- Everything inside here is shown ONLY while the app is loading -->
-        <div class="loading-container">
-            <div class="loading-content">
-                <h1 class="loading-logo">xLost<span>Pro</span></h1>
-                <div class="loading-bar-container">
-                    <div class="loading-bar" id="loading-bar"></div>
-                </div>
-            </div>
+<div id="app">
+    <div class="loader-wrapper">
+        <div class="loader-content">
+            <div class="loader-logo">xLost<span>Pro</span></div>
+            <div class="loader-bar"><div class="loader-progress"></div></div>
         </div>
     </div>
-    
-    <script src="_framework/blazor.webassembly.zxhwjtv6sc.js"></script>
-    <script>
-        window.downloadFile = (fileName, content) => {
-            const blob = new Blob([content], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = fileName; a.click();
-            a.remove(); URL.revokeObjectURL(url);
-        }
+</div>
 
-        window.modifyTextAtCursor = (el, openTag, closeTag = "") => {
-            const start = el.selectionStart;
-            const end = el.selectionEnd;
-            const text = el.value;
-            const selectedText = text.substring(start, end);
-            const before = text.substring(0, start);
-            const after = text.substring(end);
+<script src="_framework/blazor.webassembly.js"></script>
+<script>
+    window.downloadFile = (fileName, content) => {
+        const blob = new Blob([content], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = fileName; a.click();
+        URL.revokeObjectURL(url);
+    };
 
-            el.value = before + openTag + selectedText + closeTag + after;
-            el.focus();
-            el.selectionStart = start + openTag.length;
-            el.selectionEnd = start + openTag.length + selectedText.length;
-            return el.value;
-        };
-    </script>
+    window.modifyTextAtCursor = (el, openTag, closeTag = "") => {
+        const start = el.selectionStart, end = el.selectionEnd, text = el.value;
+        el.value = text.substring(0, start) + openTag + text.substring(start, end) + closeTag + text.substring(end);
+        el.focus();
+        return el.value;
+    };
 
-    <script>
-        window.setupEscapeKey = (dotNetHelper) => {
-            const handler = (e) => {
-                if (e.key === 'Escape') {
-                    dotNetHelper.invokeMethodAsync('CloseFullscreen');
-                    window.removeEventListener('keydown', handler);
-                }
-            };
-            window.addEventListener('keydown', handler);
-        };
-        window.forceTextCursor = (element) => {
-            if (!element) return;
-            element.style.cursor = 'text';
-            // Small hack: force a style recalculation to make the cursor appear
-            const dummy = element.offsetHeight;
-        };
-        window.kickSpellcheck = (el) => {
-            if (!el) return;
-            // Toggling the attribute forces the browser's spellcheck engine to re-scan the element
-            el.setAttribute('spellcheck', 'false');
-            setTimeout(() => {
-                el.setAttribute('spellcheck', 'true');
-                el.focus();
-            }, 10);
-        };
-    </script>
+    window.kickSpellcheck = (el) => {
+        if (!el) return;
+        el.setAttribute('spellcheck', 'false');
+        setTimeout(() => el.setAttribute('spellcheck', 'true'), 10);
+    };
 
+    window.forceTextCursor = (el) => { if (el) el.style.cursor = 'text'; };
+
+    let escHandler;
+    window.setupEscapeKey = (dotNetHelper) => {
+        escHandler = (e) => { if (e.key === 'Escape') dotNetHelper.invokeMethodAsync('CloseFullscreen'); };
+        window.addEventListener('keydown', escHandler);
+    };
+    window.cleanupEscapeKey = () => window.removeEventListener('keydown', escHandler);
+</script>
 </body>
-
 </html>
