@@ -1,0 +1,33 @@
+﻿@import "tailwindcss";
+
+@layer base {
+    /* Protect the Nav and Brand from Bootstrap underlines */
+    a, .nav-link, h1, h2 {
+        text-decoration: none !important;
+        box-shadow: none !important;
+    }
+    /* This kills the Bootstrap/Browser focus rectangle globally */
+    *:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    /* Remove focus outlines for mouse users, keep them for keyboard users if needed */
+    :focus:not(:focus-visible) {
+        outline: none;
+    }
+
+    /* Nuclear option for headings/divs if the above doesn't catch it */
+    h1:focus, div:focus, section:focus {
+        outline: none !important;
+    }
+
+    body {
+        @apply antialiased overflow-x-hidden;
+        font-family: 'Inter', sans-serif !important;
+    }
+
+    /* Keep the xLostPro brand looking exactly as designed */
+    .tracking-tighter {
+        letter-spacing: -0.05em !important;
+    }
+}
