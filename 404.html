@@ -61,6 +61,16 @@
         window.addEventListener('keydown', escHandler);
     };
     window.cleanupEscapeKey = () => window.removeEventListener('keydown', escHandler);
+    // SCROLL UTILITY: Moves the sidebar to a specific Choice ID
+    window.scrollToElement = (id) => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Add a temporary "flash" effect to show focus
+            el.style.outline = "2px solid #2563eb";
+            setTimeout(() => { el.style.outline = "none"; }, 1000);
+        }
+    };
 </script>
 </body>
 </html>
