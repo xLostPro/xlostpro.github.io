@@ -78,6 +78,33 @@
             top: rect.top
         };
     };
+
+    // ZENITH-APEX DOM PROBE v1.0.0
+    // Scans the current view for specific IDs or classes to ensure markup integrity.
+    window.probeMarkupIntegrity = () => {
+        const criticalElements = [
+            { name: "Flowchart Canvas", selector: ".flowchart-canvas" },
+            { name: "Editorial Sidebar", selector: "aside" },
+            { name: "Simulation Overlay", selector: ".dm-sim-mode" },
+            { name: "Intellisense Registry", selector: "#affinity-intellisense" },
+            { name: "Action Row Schema", selector: ".dm-logic-row" },
+            { name: "Settings Modal", selector: "h3:contains('Editor Settings')" } // Probes for text content
+        ];
+
+        return criticalElements.map(el => {
+            const found = document.querySelector(el.selector) !== null;
+            return { name: el.name, found: found };
+        });
+    };
+
+    // Helper for complex text-based probing
+    window.probeElementByText = (tagName, text) => {
+        const items = document.getElementsByTagName(tagName);
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].textContent.includes(text)) return true;
+        }
+        return false;
+    };
 </script>
 </body>
 </html>
