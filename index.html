@@ -31,56 +31,12 @@
 </div>
 
 <script src="_framework/blazor.webassembly.js"></script>
+<script src="js/core-utils.js"></script>
+<script src="js/unity-bridge.js"></script>
 <script>
-    window.downloadFile = (fileName, content) => {
-        const blob = new Blob([content], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = fileName; a.click();
-        URL.revokeObjectURL(url);
-    };
-
-    window.modifyTextAtCursor = (el, openTag, closeTag = "") => {
-        const start = el.selectionStart, end = el.selectionEnd, text = el.value;
-        el.value = text.substring(0, start) + openTag + text.substring(start, end) + closeTag + text.substring(end);
-        el.focus();
-        return el.value;
-    };
-
-    window.kickSpellcheck = (el) => {
-        if (!el) return;
-        el.setAttribute('spellcheck', 'false');
-        setTimeout(() => el.setAttribute('spellcheck', 'true'), 10);
-    };
-
-    window.forceTextCursor = (el) => { if (el) el.style.cursor = 'text'; };
-
-    let escHandler;
-    window.setupEscapeKey = (dotNetHelper) => {
-        escHandler = (e) => { if (e.key === 'Escape') dotNetHelper.invokeMethodAsync('CloseFullscreen'); };
-        window.addEventListener('keydown', escHandler);
-    };
-    window.cleanupEscapeKey = () => window.removeEventListener('keydown', escHandler);
-    // SCROLL UTILITY: Moves the sidebar to a specific Choice ID
-    window.scrollToElement = (id) => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            el.style.outline = "2px solid #2563eb";
-            setTimeout(() => { el.style.outline = "none"; }, 1000);
-        }
-    };
-    // SPATIAL CALCULUS HELPER: Returns precise element positioning for coordinate normalisation
-    window.getElementRect = (el) => {
-        const rect = el.getBoundingClientRect();
-        return {
-            left: rect.left,
-            top: rect.top
-        };
-    };
-
-    // ZENITH-APEX DOM PROBE v1.0.0
+    // ZENITH-APEX DOM PROBE v1.3.0
     // Scans the current view for specific IDs or classes to ensure markup integrity.
+    // Includes a text-content pass for the Settings Modal.
     window.probeMarkupIntegrity = () => {
         const criticalElements = [
             { name: "Flowchart Canvas", selector: ".flowchart-canvas" },
@@ -88,23 +44,30 @@
             { name: "Simulation Overlay", selector: ".dm-sim-mode" },
             { name: "Intellisense Registry", selector: "#affinity-intellisense" },
             { name: "Action Row Schema", selector: ".dm-logic-row" },
-            { name: "Settings Modal", selector: "h3:contains('Editor Settings')" } // Probes for text content
+            { name: "Unity Engine Host", selector: "#unity-canvas" }
         ];
 
-        return criticalElements.map(el => {
-            const found = document.querySelector(el.selector) !== null;
-            return { name: el.name, found: found };
-        });
+        // 1. Standard CSS Selector Pass
+        const results = criticalElements.map(el => ({
+            name: el.name,
+            found: document.querySelector(el.selector) !== null
+        }));
+
+        // 2. Text-Content Pass for Settings Modal (Special Requirement)
+        // Uses the restored 'probeElementByText' utility
+        const settingsModalFound = window.probeElementByText("h3", "Editor Settings");
+        results.push({ name: "Settings Modal", found: settingsModalFound });
+
+        return results;
     };
 
-    // Helper for complex text-based probing
-    window.probeElementByText = (tagName, text) => {
-        const items = document.getElementsByTagName(tagName);
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].textContent.includes(text)) return true;
-        }
-        return false;
+    // ESCAPE KEY HUB
+    let escHandler;
+    window.setupEscapeKey = (dotNetHelper) => {
+        escHandler = (e) => { if (e.key === 'Escape') dotNetHelper.invokeMethodAsync('CloseFullscreen'); };
+        window.addEventListener('keydown', escHandler);
     };
+    window.cleanupEscapeKey = () => window.removeEventListener('keydown', escHandler);
 </script>
 </body>
 </html>
