@@ -51,3 +51,17 @@ window.probeElementByText = (tagName, text) => {
     return false;
 };
 
+/**
+ * Synchronises the scroll position of the lens div with the textarea.
+ * This prevents "Highlight Drift" during long narrative entries.
+ */
+window.syncEditorScroll = (textarea) => {
+    if (!textarea) return;
+    const container = textarea.parentElement;
+    const lens = container.querySelector('.editor-lens');
+    if (lens) {
+        lens.scrollTop = textarea.scrollTop;
+        lens.scrollLeft = textarea.scrollLeft;
+    }
+};
+
