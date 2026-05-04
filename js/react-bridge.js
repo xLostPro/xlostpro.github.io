@@ -5,14 +5,36 @@
  */
 
 window.initialiseReactModule = (entryPath) => {
-    // Check if script is already in memory
     const existingScript = document.getElementById("external-react-entry");
 
-    if (existingScript) {
-        // If script exists, just trigger the mount function
+    const triggerMount = () => {
         if (typeof window.mountEliteFC === 'function') {
             window.mountEliteFC("root");
+
+            /* 
+             * ZENITH-APEX MOBILE SPACER INJECTION
+             * We wait 1 second for the React DOM to settle, then inject a spacer 
+             * ONLY if the user is on a mobile device.
+             */
+            setTimeout(() => {
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                const root = document.getElementById("root");
+
+                if (isMobile && root && !document.getElementById("ios-safety-spacer")) {
+                    const spacer = document.createElement("div");
+                    spacer.id = "ios-safety-spacer";
+                    spacer.style.height = "120px"; // Ensures user can scroll past UI bars
+                    spacer.style.width = "100%";
+                    spacer.style.flexShrink = "0";
+                    root.appendChild(spacer);
+                    console.log("Zenith-Apex: Mobile Safety Spacer Initialised.");
+                }
+            }, 1000);
         }
+    };
+
+    if (existingScript) {
+        triggerMount();
         return;
     }
 
@@ -20,17 +42,7 @@ window.initialiseReactModule = (entryPath) => {
     script.src = entryPath;
     script.type = "module";
     script.id = "external-react-entry";
-
-    script.onload = () => {
-        console.log("Zenith-Apex: Script Loaded. Triggering Bootloader...");
-        // Give the browser one tick to parse the module exports
-        setTimeout(() => {
-            if (typeof window.mountEliteFC === 'function') {
-                window.mountEliteFC("root");
-            }
-        }, 10);
-    };
-
+    script.onload = triggerMount;
     document.body.appendChild(script);
 };
 

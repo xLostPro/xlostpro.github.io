@@ -27,3 +27,25 @@
     /* Remove default Blazor Focus Rings */
     *:focus { outline: none !important; }
 }
+
+/* 
+ =============================================================================================
+ ZENITH-APEX CONDITIONAL MOBILE RECTIFICATION
+ =============================================================================================
+ These rules ONLY activate on touch devices. Desktop remains 100% untouched.
+ =============================================================================================
+*/
+@media (hover: none) and (pointer: coarse) {
+    #root {
+        height: 100% !important;
+        min-height: 100dvh !important;
+    }
+
+    #react-app-root {
+        -webkit-overflow-scrolling: touch;
+        overflow-y: auto !important;
+        height: 100dvh !important;
+        /* Only add the buffer on mobile to clear the iOS home bar */
+        padding-bottom: 80px !important;
+    }
+}
