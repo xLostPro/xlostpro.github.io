@@ -30,22 +30,41 @@
 
 /* 
  =============================================================================================
- ZENITH-APEX CONDITIONAL MOBILE RECTIFICATION
+ ZENITH-APEX UNIFIED VIEWPORT ORCHESTRATION v1.2.0
  =============================================================================================
- These rules ONLY activate on touch devices. Desktop remains 100% untouched.
+ Standardised classes for the Project Runner. 
+ Eliminates scroll-flicker on Desktop and reaches the "Dead Zone" on iOS Safari.
  =============================================================================================
 */
-@media (hover: none) and (pointer: coarse) {
-    #root {
-        height: 100% !important;
-        min-height: 100dvh !important;
-    }
 
-    #react-app-root {
-        -webkit-overflow-scrolling: touch;
-        overflow-y: auto !important;
-        height: 100dvh !important;
-        /* Only add the buffer on mobile to clear the iOS home bar */
-        padding-bottom: 80px !important;
+/* Applied to the body when a project is in full-screen */
+body.project-expanded {
+    overflow: hidden !important;
+    height: 100vh;
+    height: 100dvh; /* Modern Dynamic Viewport */
+    width: 100vw;
+    position: fixed; /* Stops iOS background bounce */
+}
+
+/* Container-specific authority */
+.react-host-container {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    /* The iOS "Reach" Fix: Ensures 120px clearance at the bottom on mobile only */
+    padding-bottom: 0;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .react-host-container {
+        padding-bottom: 120px !important;
     }
+}
+
+/* Ensures the React internal root respects the container */
+#root {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
 }
