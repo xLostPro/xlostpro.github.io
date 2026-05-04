@@ -30,53 +30,66 @@
 
 /* 
  =============================================================================================
- ZENITH-APEX UNIFIED VIEWPORT ORCHESTRATION v1.2.0
+ ZENITH-APEX UNIFIED VIEWPORT ORCHESTRATION v1.7.0
  =============================================================================================
- Standardised classes for the Project Runner. 
- Eliminates scroll-flicker on Desktop and reaches the "Dead Zone" on iOS Safari.
+ This is the 'Gold Master' CSS for the Elite FC Hybrid Integration.
+ 1. Stops background scroll on all platforms.
+ 2. Fixes iOS Safari 'Background Bounce' via Position Locking.
+ 3. Clears the iOS Safari Toolbar via Mechanical Padding.
+ 4. Preserves 'Perfect' Desktop scrolling logic.
  =============================================================================================
 */
 
+/* --- LAYER 1: GLOBAL EXPANSION AUTHORITY --- */
 body.project-expanded {
+    /* Prevents the background Blazor list from scrolling */
     overflow: hidden !important;
-    position: fixed;
-    width: 100%;
-    height: 100%; /* Fallback */
-    height: 100dvh;
 }
 
+/* --- LAYER 2: MOBILE-SPECIFIC BODY LOCKING --- */
+@media (hover: none) and (pointer: coarse) {
+    body.project-expanded {
+        /* 
+         * Essential for iOS: 'fixed' is the only way to stop Safari from 
+         * scrolling the background instead of the React app.
+         */
+        position: fixed !important;
+        width: 100% !important;
+        height: 100dvh !important; /* Respects dynamic mobile browser bars */
+    }
+}
+
+/* --- LAYER 3: THE SCROLLING ENGINE (Blazor Host) --- */
 .react-host-container {
     height: 100%;
     width: 100%;
-    /* 
-     * Force the creation of a 'Stacking Context'. 
-     * This helps iOS Safari distinguish between the Blazor Shell and the React App.
-     */
-    display: block;
-    overflow-y: scroll !important; /* Force scroll visibility */
-    -webkit-overflow-scrolling: touch;
     position: relative;
+    display: block;
+
+    /* Momentum scrolling for a native iOS feel */
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+
+    /* 
+     * THE REACH BUFFER:
+     * Added specifically for touch devices to clear the Safari toolbar.
+     */
+    padding-bottom: 0;
 }
 
-/* 
- * TARGET THE REACT ROOT:
- * We force the React root to be at least as tall as the viewport 
- * plus a 120px buffer to clear the Safari Toolbar.
- */
 @media (hover: none) and (pointer: coarse) {
-    #root {
-        min-height: calc(100dvh + 120px) !important;
-        padding-bottom: 120px !important;
-    }
     .react-host-container {
-        padding-bottom: 200px !important; /* Large buffer to ensure the very last item is visible */
+        padding-bottom: 120px !important;
         box-sizing: border-box !important;
     }
-}
 
-/* Ensures the React internal root respects the container */
-#root {
-    height: auto !important;
-    min-height: 100% !important;
-    overflow: visible !important;
+    /* --- LAYER 4: THE AUTHORITY HANDOVER (React Root) --- */
+    #root {
+        /* Force React to expand into the Blazor container's scroll buffer */
+        height: auto !important;
+        min-height: 100% !important;
+        overflow: visible !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
 }

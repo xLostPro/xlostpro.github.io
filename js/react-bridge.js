@@ -5,33 +5,24 @@
 window.initialiseReactModule = (entryPath) => {
     const mount = () => {
         if (typeof window.mountEliteFC === 'function') {
-            // 1. INSTANT MOUNT: Show the app to the user immediately
             window.mountEliteFC("root");
             console.log("Zenith-Apex: React hydration initialised.");
 
-            // 2. BACKGROUND INJECTION: Sneak the spacer in without blocking the UI
-            // This happens on the next available frame (approx 16ms)
+            /* 
+             * BACKGROUND KICK:
+             * We do a single, tiny scroll reset to make sure iOS Safari 
+             * acknowledges the container's new CSS padding immediately.
+             */
             window.requestAnimationFrame(() => {
-                const root = document.getElementById("root");
-                if (root && !document.getElementById("zenith-ios-spacer")) {
-                    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-                    if (isMobile) {
-                        const spacer = document.createElement("div");
-                        spacer.id = "zenith-ios-spacer";
-                        // Using 'visibility: hidden' so it occupies space but isn't seen
-                        spacer.style.cssText = "height: 160px !important; width: 100%; display: block; flex-shrink: 0; visibility: hidden; pointer-events: none;";
-                        root.appendChild(spacer);
-                        console.log("Zenith-Apex: Mobile spacer injected via background thread.");
-                    }
-                }
+                const container = document.querySelector('.react-host-container');
+                if (container) container.scrollTop = 0;
             });
         }
     };
 
     const existingScript = document.getElementById("external-react-entry");
-
     if (existingScript) {
-        mount(); // Immediate call if script is cached
+        mount();
         return;
     }
 
@@ -39,10 +30,10 @@ window.initialiseReactModule = (entryPath) => {
     script.src = entryPath;
     script.type = "module";
     script.id = "external-react-entry";
-    script.onload = mount; // Mount as soon as download completes
-
+    script.onload = mount;
     document.body.appendChild(script);
 };
+
 
 window.terminateReactModule = () => {
     if (typeof window.unmountEliteFC === 'function') {
