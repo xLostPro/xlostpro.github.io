@@ -30,59 +30,76 @@
 
 /* 
  =============================================================================================
- ZENITH-APEX FLUID VIEWPORT ORCHESTRATION v2.1.0
+ ZENITH-APEX GESTURE ORCHESTRATION v2.2.0
  =============================================================================================
- RECTIFIED: Implemented overscroll-behavior to eliminate iOS 'Double-Scroll' chaining.
- RECTIFIED: Utilised 100dvh to ensure the container perfectly matches the visible area.
+ This architecture establishes a 'Hard Handshake' for iOS Safari.
+ 1. Locks the background with 100% rigidity.
+ 2. Grants 'Touch Authority' to the Main App and Sidebar layers independently.
+ 3. Eliminates 'Wait-to-Scroll' chaining at the edges.
  =============================================================================================
 */
 
-/* --- LAYER 1: THE BACKGROUND LOCK --- */
+/* --- LAYER 1: THE RIGID BACKDROP --- */
 body.project-expanded {
     overflow: hidden !important;
-    /* Prevents the body from rubber-banding when the React app hits the end */
+    /* Prevents the 'Double-Scroll' bounce entirely */
     overscroll-behavior: none !important;
 }
 
-@media (hover: none) and (pointer: coarse) {
+@media (pointer: coarse) {
     body.project-expanded {
-        /* Force the body to match the dynamic viewport exactly */
-        height: 100dvh !important;
+        /* Essential Position Lock for iOS */
         position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
         width: 100% !important;
+        height: 100dvh !important;
     }
 }
 
-/* --- LAYER 2: THE SCROLLING AUTHORITY --- */
+/* --- LAYER 2: MAIN CONTENT AUTHORITY --- */
 .react-host-container {
     height: 100% !important;
     width: 100% !important;
     display: block !important;
-
-    /* 
-     * THE CHAIN-BREAKER:
-     * This prevents the 'pause' at the top and bottom of the list.
-     * It forces the browser to treat this container as the absolute end of the page.
-     */
-    overscroll-behavior-y: contain !important;
-
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
+    /* Explicitly tells iOS that this layer handles vertical swipes */
+    touch-action: pan-y;
+    overscroll-behavior-y: contain !important;
 }
 
-@media (hover: none) and (pointer: coarse) {
+@media (pointer: coarse) {
     .react-host-container {
-        /* Set height to dvh specifically for mobile to prevent toolbar overlap */
         height: 100dvh !important;
-        /* Padding to clear the physical toolbar */
+        /* Padding to clear the physical Safari toolbar */
         padding-bottom: 120px !important;
         box-sizing: border-box !important;
     }
 
+    /* --- LAYER 3: SIDEBAR / MODAL AUTHORITY --- */
+    /* 
+     * Targets anything React renders as a fixed overlay (Sidebar, Drawer, Modal).
+     * We force these to have their own independent scroll authority.
+     */
+    #root aside,
+    #root > div.fixed,
+    #root [style*="fixed"] {
+        position: fixed !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        /* Grant independent touch authority to the sidebar */
+        touch-action: pan-y !important;
+        max-height: 100dvh !important;
+        z-index: 9999 !important;
+    }
+
+    /* --- LAYER 4: THE REACH RUNWAY --- */
     #root {
-        /* Allow natural expansion so the container padding is reachable */
         height: auto !important;
-        min-height: 100% !important;
-        padding-bottom: 40px !important;
+        min-height: 101dvh !important; /* Forces a scrollable pixel even on short pages */
+        padding-bottom: 120px !important;
+        display: flex !important;
+        flex-direction: column !important;
     }
 }

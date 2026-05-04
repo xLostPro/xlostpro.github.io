@@ -2,6 +2,7 @@
     const mount = () => {
         if (typeof window.mountEliteFC === 'function') {
             window.mountEliteFC("root");
+            console.log("Zenith-Apex: Hybrid Runtime Hydrated.");
         }
     };
 
