@@ -48,25 +48,13 @@ window.terminateReactModule = () => {
  */
 if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
-        // 1. Identify the active container
         const container = document.querySelector('.react-host-container');
 
-        /* 
-         * 2. Only execute if the project is actually expanded.
-         * This prevents unnecessary layout calculations on the main Home/Project list pages.
-         */
         if (container && document.body.classList.contains('project-expanded')) {
-            // Force the container to match the physical visible area exactly
-            container.style.height = `${window.visualViewport.height}px`;
-
-            /* 
-             * 3. Editorial Polish: If the keyboard was dismissed, 
-             * we kick the scroll slightly to ensure the browser re-evaluates bottom reach.
-             */
-            if (window.visualViewport.offsetTop === 0) {
+            window.requestAnimationFrame(() => {
                 container.scrollTop = container.scrollTop + 1;
                 container.scrollTop = container.scrollTop - 1;
-            }
+            });
         }
     });
 }
