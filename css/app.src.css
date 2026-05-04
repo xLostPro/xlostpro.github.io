@@ -30,78 +30,71 @@
 
 /* 
  =============================================================================================
- ZENITH-APEX CONSOLIDATED MOBILE ORCHESTRATION v1.8.0
+ ZENITH-APEX PRECISION VIEWPORT ORCHESTRATION v1.9.0
  =============================================================================================
- This block manages the physical handshake between the Blazor host shell and the 
- external React Virtual DOM. It is engineered to solve iOS Safari's toolbar 
- 'Dead Zone' and the 'Sidebar Scroll Lock' without modifying the React source.
+ This architecture utilises 'Pointer-Level Authority' to ensure that Desktop 
+ and Mobile logic never collide.
  =============================================================================================
 */
 
-/* 1. GLOBAL AUTHORITY: Freezes the background list when a project is open */
-body.project-expanded {
-    overflow: hidden !important;
-}
-
-/* 2. MOBILE-SPECIFIC HARDENING: Active only on touch-interface devices */
-@media (hover: none) and (pointer: coarse) {
-
-    /* FORCED POSITION LOCK: 
-       The only 100% reliable way to stop iOS Safari from 'Background Bouncing' */
+/* --- LAYER 1: DESKTOP AUTHORITY (Mouse/Trackpad) --- */
+@media (pointer: fine) {
     body.project-expanded {
-        position: fixed !important;
-        width: 100% !important;
-        height: 100dvh !important; /* Respects Dynamic Viewport Height */
+        /* On Desktop, we only need to hide the scrollbar to prevent double-scrolling */
+        overflow: hidden !important;
+        /* Ensure no layout shifting */
+        padding-right: 0 !important;
     }
 
-    /* THE SCROLLING ENGINE: 
-       This is the Blazor-owned container that hosts the React app */
+    .react-host-container {
+        height: 100%;
+        width: 100%;
+        overflow: hidden; /* Desktop React apps usually handle their own internal scroll */
+    }
+
+    #root {
+        height: 100% !important;
+        width: 100% !important;
+        padding-bottom: 0 !important; /* No extra padding on Desktop */
+    }
+}
+
+/* --- LAYER 2: MOBILE AUTHORITY (Touch/iOS Safari) --- */
+@media (pointer: coarse) {
+    body.project-expanded {
+        /* Stops background bounce on iOS */
+        position: fixed !important;
+        width: 100% !important;
+        height: 100dvh !important;
+        overflow: hidden !important;
+    }
+
     .react-host-container {
         height: 100% !important;
         width: 100% !important;
-        position: relative !important;
-        display: block !important;
-
-        /* Momentum scrolling for native iOS performance */
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch;
-
-        /* MECHANICAL REACH BUFFER: 
-           Pushes content up by 160px to clear the dynamic Safari toolbar */
-        padding-bottom: 160px !important;
-        box-sizing: border-box !important;
+        /* Removed padding here to prevent the 'Double-Void' effect */
+        padding-bottom: 0 !important;
     }
 
-    /* THE SIDEBAR AUTHORITY: 
-       Targets React's 'Fixed' layers (sidebar/modals) to prevent gesture-locks */
-    #root > div[style*="fixed"],
-    #root aside,
-    .fixed {
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        /* Pulls fixed layers above the toolbar */
-        max-height: 100dvh !important;
-        overscroll-behavior: contain !important;
-    }
-
-    /* THE HANDOVER: 
-       Forces the React root to grow naturally into the Blazor scroll runway */
+    /* THE REACHauthority: Consolidation of all reach logic into one rule */
     #root {
         height: auto !important;
         min-height: 100% !important;
-        overflow: visible !important;
         display: flex !important;
         flex-direction: column !important;
-        /* Secondary safety padding inside the React tree */
-        padding-bottom: 160px !important;
+        /* The Sweet Spot: Clears the Safari toolbar without a massive gap */
+        padding-bottom: 100px !important;
     }
-}
 
-/* 3. DESKTOP REINFORCEMENT: Ensures zero impact on non-touch devices */
-@media (hover: hover) {
-    #root {
-        height: 100%;
-        width: 100%;
-        overflow: hidden; /* Standard Desktop containment */
+    /* THE SIDEBAR FIX: Ensures fixed layers are scrollable and reachable */
+    #root aside,
+    #root > div[style*="fixed"],
+    .fixed {
+        max-height: 100dvh !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 80px !important; /* Specific sidebar reach */
     }
 }
