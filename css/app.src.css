@@ -37,34 +37,46 @@
  =============================================================================================
 */
 
-/* Applied to the body when a project is in full-screen */
 body.project-expanded {
     overflow: hidden !important;
-    height: 100vh;
-    height: 100dvh; /* Modern Dynamic Viewport */
-    width: 100vw;
-    position: fixed; /* Stops iOS background bounce */
+    position: fixed;
+    width: 100%;
+    height: 100%; /* Fallback */
+    height: 100dvh;
 }
 
-/* Container-specific authority */
 .react-host-container {
     height: 100%;
     width: 100%;
-    overflow-y: auto !important;
+    /* 
+     * Force the creation of a 'Stacking Context'. 
+     * This helps iOS Safari distinguish between the Blazor Shell and the React App.
+     */
+    display: block;
+    overflow-y: scroll !important; /* Force scroll visibility */
     -webkit-overflow-scrolling: touch;
-    /* The iOS "Reach" Fix: Ensures 120px clearance at the bottom on mobile only */
-    padding-bottom: 0;
+    position: relative;
 }
 
+/* 
+ * TARGET THE REACT ROOT:
+ * We force the React root to be at least as tall as the viewport 
+ * plus a 120px buffer to clear the Safari Toolbar.
+ */
 @media (hover: none) and (pointer: coarse) {
-    .react-host-container {
+    #root {
+        min-height: calc(100dvh + 120px) !important;
         padding-bottom: 120px !important;
+    }
+    .react-host-container {
+        padding-bottom: 200px !important; /* Large buffer to ensure the very last item is visible */
+        box-sizing: border-box !important;
     }
 }
 
 /* Ensures the React internal root respects the container */
 #root {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
 }
