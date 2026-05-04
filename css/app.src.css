@@ -30,46 +30,59 @@
 
 /* 
  =============================================================================================
- ZENITH-APEX MINIMALIST VIEWPORT ORCHESTRATION v2.0.0
+ ZENITH-APEX FLUID VIEWPORT ORCHESTRATION v2.1.0
  =============================================================================================
- This version removes all aggressive locks to restore natural scrolling.
+ RECTIFIED: Implemented overscroll-behavior to eliminate iOS 'Double-Scroll' chaining.
+ RECTIFIED: Utilised 100dvh to ensure the container perfectly matches the visible area.
  =============================================================================================
 */
 
-/* --- LAYER 1: THE BODY LOCK --- */
-/* Simple and non-destructive. Only hides the background scrollbar. */
+/* --- LAYER 1: THE BACKGROUND LOCK --- */
 body.project-expanded {
     overflow: hidden !important;
+    /* Prevents the body from rubber-banding when the React app hits the end */
+    overscroll-behavior: none !important;
 }
 
-/* --- LAYER 2: THE HOST CONTAINER --- */
+@media (hover: none) and (pointer: coarse) {
+    body.project-expanded {
+        /* Force the body to match the dynamic viewport exactly */
+        height: 100dvh !important;
+        position: fixed !important;
+        width: 100% !important;
+    }
+}
+
+/* --- LAYER 2: THE SCROLLING AUTHORITY --- */
 .react-host-container {
-    height: 100%;
-    width: 100%;
-    /* Restore natural browser scrolling */
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+
+    /* 
+     * THE CHAIN-BREAKER:
+     * This prevents the 'pause' at the top and bottom of the list.
+     * It forces the browser to treat this container as the absolute end of the page.
+     */
+    overscroll-behavior-y: contain !important;
+
     overflow-y: auto !important;
-    overflow-x: hidden !important;
     -webkit-overflow-scrolling: touch;
 }
 
-/* --- LAYER 3: MOBILE-ONLY REACH (iOS Safari) --- */
 @media (hover: none) and (pointer: coarse) {
-    /* 
-     * THE RUNWAY: We target the internal root. 
-     * We don't force a height; we just add a physical buffer 
-     * that allows the last item to clear the toolbar.
-     */
-    #root {
+    .react-host-container {
+        /* Set height to dvh specifically for mobile to prevent toolbar overlap */
+        height: 100dvh !important;
+        /* Padding to clear the physical toolbar */
         padding-bottom: 120px !important;
-        min-height: 100% !important;
+        box-sizing: border-box !important;
     }
 
-    /* 
-     * THE SIDEBAR FIX: We ONLY ensure it clears the toolbar. 
-     * We no longer force overflow, which was breaking the buttons.
-     */
-    #root aside {
-        padding-bottom: 100px !important;
-        box-sizing: border-box !important;
+    #root {
+        /* Allow natural expansion so the container padding is reachable */
+        height: auto !important;
+        min-height: 100% !important;
+        padding-bottom: 40px !important;
     }
 }

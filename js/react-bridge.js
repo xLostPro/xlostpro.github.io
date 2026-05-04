@@ -1,9 +1,4 @@
-﻿/**
- * ZENITH-APEX CLEAN HANDSHAKE v2.0.0
- * Zero interference. Simply mounts and unmounts the React tree.
- */
-
-window.initialiseReactModule = (entryPath) => {
+﻿window.initialiseReactModule = (entryPath) => {
     const mount = () => {
         if (typeof window.mountEliteFC === 'function') {
             window.mountEliteFC("root");
