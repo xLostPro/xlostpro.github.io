@@ -30,16 +30,13 @@
 
 /* 
  =============================================================================================
- ZENITH-APEX REFINED VIEWPORT v2.5.0 // MOBILE MASTER
+ ZENITH-APEX PRECISION MOBILE VIEWPORT v2.6.0
+ =============================================================================================
+ RECTIFIED: Modified fixed element selectors to exclude buttons. 
+ This prevents the sidebar toggle icon from stretching to fill the page height.
  =============================================================================================
 */
 
-/* 1. DESKTOP SAFETY: Purely hides the scrollbar */
-@media (pointer: fine) {
-    body.project-expanded { overflow: hidden !important; }
-}
-
-/* 2. MOBILE AUTHORITY: The 'Full-Screen Portal' */
 @media (pointer: coarse) {
     body.project-expanded {
         position: fixed !important;
@@ -49,38 +46,42 @@
     }
 
     .react-host-container {
-        /* On mobile, we turn the container into the absolute master layer */
         position: fixed !important;
         inset: 0 !important;
         z-index: 9999 !important;
-        background: #fff; /* Match your app background */
+        background: #fff;
 
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch;
 
-        /* THE REACH FIX: Sufficient buffer for the Safari Toolbar */
+        /* THE REACH BUFFER */
         padding-bottom: 120px !important;
         box-sizing: border-box !important;
     }
 
-    /* 3. SIDEBAR GESTURE FIX: 
-       Targets React's overlays and forces them into the new touch context */
+    /* 
+     * THE SELECTIVE SIDEBAR FIX:
+     * We target the Sidebar Container (aside/div) but EXCLUDE the Toggle Button.
+     * This ensures the menu scrolls correctly without breaking the UI icons.
+     */
     #root aside,
-    #root > div[class*="sidebar"],
-    .fixed {
-        /* Force the sidebar to ignore the parent's fixed state */
+    #root div.fixed:not(button),
+    #root div[class*="sidebar"] {
         position: fixed !important;
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
         max-height: 100% !important;
-        /* Pulls the sidebar above the Safari Toolbar */
+
+        /* 
+         * Stretches the container to clear the dynamic Safari toolbar,
+         * but 'not(button)' ensures your toggle stays its original size.
+         */
         height: -webkit-fill-available !important;
     }
 
     #root {
         height: auto !important;
         min-height: 100% !important;
-        /* Ensures no 'Double-Scroll' wait time */
         overscroll-behavior: none !important;
     }
 }
