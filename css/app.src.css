@@ -30,76 +30,57 @@
 
 /* 
  =============================================================================================
- ZENITH-APEX GESTURE ORCHESTRATION v2.2.0
- =============================================================================================
- This architecture establishes a 'Hard Handshake' for iOS Safari.
- 1. Locks the background with 100% rigidity.
- 2. Grants 'Touch Authority' to the Main App and Sidebar layers independently.
- 3. Eliminates 'Wait-to-Scroll' chaining at the edges.
+ ZENITH-APEX REFINED VIEWPORT v2.5.0 // MOBILE MASTER
  =============================================================================================
 */
 
-/* --- LAYER 1: THE RIGID BACKDROP --- */
-body.project-expanded {
-    overflow: hidden !important;
-    /* Prevents the 'Double-Scroll' bounce entirely */
-    overscroll-behavior: none !important;
+/* 1. DESKTOP SAFETY: Purely hides the scrollbar */
+@media (pointer: fine) {
+    body.project-expanded { overflow: hidden !important; }
 }
 
+/* 2. MOBILE AUTHORITY: The 'Full-Screen Portal' */
 @media (pointer: coarse) {
     body.project-expanded {
-        /* Essential Position Lock for iOS */
         position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
+        overflow: hidden !important;
         width: 100% !important;
-        height: 100dvh !important;
+        height: 100% !important;
     }
-}
 
-/* --- LAYER 2: MAIN CONTENT AUTHORITY --- */
-.react-host-container {
-    height: 100% !important;
-    width: 100% !important;
-    display: block !important;
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch;
-    /* Explicitly tells iOS that this layer handles vertical swipes */
-    touch-action: pan-y;
-    overscroll-behavior-y: contain !important;
-}
-
-@media (pointer: coarse) {
     .react-host-container {
-        height: 100dvh !important;
-        /* Padding to clear the physical Safari toolbar */
+        /* On mobile, we turn the container into the absolute master layer */
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 9999 !important;
+        background: #fff; /* Match your app background */
+
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+
+        /* THE REACH FIX: Sufficient buffer for the Safari Toolbar */
         padding-bottom: 120px !important;
         box-sizing: border-box !important;
     }
 
-    /* --- LAYER 3: SIDEBAR / MODAL AUTHORITY --- */
-    /* 
-     * Targets anything React renders as a fixed overlay (Sidebar, Drawer, Modal).
-     * We force these to have their own independent scroll authority.
-     */
+    /* 3. SIDEBAR GESTURE FIX: 
+       Targets React's overlays and forces them into the new touch context */
     #root aside,
-    #root > div.fixed,
-    #root [style*="fixed"] {
+    #root > div[class*="sidebar"],
+    .fixed {
+        /* Force the sidebar to ignore the parent's fixed state */
         position: fixed !important;
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
-        /* Grant independent touch authority to the sidebar */
-        touch-action: pan-y !important;
-        max-height: 100dvh !important;
-        z-index: 9999 !important;
+        max-height: 100% !important;
+        /* Pulls the sidebar above the Safari Toolbar */
+        height: -webkit-fill-available !important;
     }
 
-    /* --- LAYER 4: THE REACH RUNWAY --- */
     #root {
         height: auto !important;
-        min-height: 101dvh !important; /* Forces a scrollable pixel even on short pages */
-        padding-bottom: 120px !important;
-        display: flex !important;
-        flex-direction: column !important;
+        min-height: 100% !important;
+        /* Ensures no 'Double-Scroll' wait time */
+        overscroll-behavior: none !important;
     }
 }
