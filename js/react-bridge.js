@@ -15,6 +15,9 @@ window.initialiseReactModule = (entryPath) => {
             window.mountEliteFC("root");
             console.log("Zenith-Apex: React Authority established.");
         }
+        else if (typeof window.mountSourceAuditor === 'function') {
+            window.mountSourceAuditor("root");
+        }
     };
 
     const existingScript = document.getElementById("external-react-entry");
@@ -34,6 +37,9 @@ window.initialiseReactModule = (entryPath) => {
 window.terminateReactModule = () => {
     if (typeof window.unmountEliteFC === 'function') {
         window.unmountEliteFC();
+    }
+    if (typeof window.unmountSourceAuditor === 'function') {
+        window.unmountSourceAuditor();
     }
 };
 
