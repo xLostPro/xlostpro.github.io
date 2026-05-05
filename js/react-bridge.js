@@ -10,23 +10,32 @@ const preventDefault = (e) => {
 };
 
 window.initialiseReactModule = (entryPath) => {
-    // 1. Ensure any previous script is purged before adding a new one
+    // 1. Purge any existing script tag
     const oldScript = document.getElementById("external-react-entry");
-    if (oldScript) {
-        oldScript.remove();
-    }
+    if (oldScript) oldScript.remove();
 
     const mount = () => {
-        // Universal Handshake: Detect which app was loaded and call its mount function
-        if (typeof window.mountEliteFC === 'function') {
-            window.mountEliteFC("root");
-        } else if (typeof window.mountSourceAuditor === 'function') {
-            window.mountSourceAuditor("root");
+        console.log("Zenith-Apex: Handshake Initialised for: " + entryPath);
+
+        /* 
+         * STRICT PATH AUTHORITY:
+         * Instead of checking 'if exists', we check which app the path belongs to.
+         * This prevents 'Elite FC' from loading inside the 'Source Auditor' view.
+         */
+        if (entryPath.includes('elite-fc')) {
+            if (typeof window.mountEliteFC === 'function') window.mountEliteFC("root");
         }
+        else if (entryPath.includes('source-auditor')) {
+            if (typeof window.mountSourceAuditor === 'function') window.mountSourceAuditor("root");
+        }
+
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile) window.lockMobileBackground();
     };
 
     const script = document.createElement("script");
-    script.src = entryPath;
+    // Cache-busting is essential here to ensure the script re-runs and sets the window functions
+    script.src = `${entryPath}?v=${Date.now()}`;
     script.type = "module";
     script.id = "external-react-entry";
     script.onload = mount;
@@ -34,27 +43,26 @@ window.initialiseReactModule = (entryPath) => {
     document.body.appendChild(script);
 };
 
+
+
 window.terminateReactModule = () => {
-    console.log("Zenith-Apex: Executing Global React Purge...");
+    console.log("Zenith-Apex: Executing Hard Purge...");
 
-    // 1. Trigger the specific unmount functions
-    if (typeof window.unmountEliteFC === 'function') {
-        window.unmountEliteFC();
-    }
-    if (typeof window.unmountSourceAuditor === 'function') {
-        window.unmountSourceAuditor();
-    }
+    window.unlockMobileBackground();
 
-    // 2. Physically clear the script tag to avoid variable collisions
+    // 1. Physically unmount the React trees
+    if (typeof window.unmountEliteFC === 'function') window.unmountEliteFC();
+    if (typeof window.unmountSourceAuditor === 'function') window.unmountSourceAuditor();
+
+    // 2. Remove the script tag
     const script = document.getElementById("external-react-entry");
-    if (script) {
-        script.remove();
-    }
-    // 3. Clear the global functions to ensure a fresh handshake next time
-    delete window.mountEliteFC;
-    delete window.unmountEliteFC;
-    delete window.mountSourceAuditor;
-    delete window.unmountSourceAuditor;
+    if (script) script.remove();
+
+    // 3. NUCLEAR OPTION: Nullify the functions so they cannot be miscalled
+    window.mountEliteFC = null;
+    window.mountSourceAuditor = null;
+    window.unmountEliteFC = null;
+    window.unmountSourceAuditor = null;
 };
 
 /**
