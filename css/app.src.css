@@ -28,67 +28,37 @@
     *:focus { outline: none !important; }
 }
 
-/*
-=============================================================================================
-ZENITH-APEX CONSOLIDATED VIEWPORT ORCHESTRATION v2.7.0
-=============================================================================================
-RECTIFIED: Restored the mechanical buffer for iOS Safari reach.
-RECTIFIED: Hardened sidebar touch-authority for fixed React overlays.
-=============================================================================================
+/* 
+ =============================================================================================
+ ZENITH-APEX NATIVE VIEWPORT ISOLATION v3.0.0
+ =============================================================================================
+ Overhauled: No artificial padding, no aggressive fixed targeting.
+ =============================================================================================
 */
 
-/* GLOBAL AUTHORITY: Freezes the Blazor background */
+/* 1. Freezes the Blazor background natively */
 body.project-expanded {
     overflow: hidden !important;
+    overscroll-behavior: none !important;
 }
 
-@media (pointer: coarse) {
-    /* Hard Position Lock for iOS: Stops background rubber-banding */
-    body.project-expanded {
-        position: fixed !important;
-        top: 0;
-        left: 0;
-        width: 100% !important;
-        height: 100% !important;
-        height: 100dvh !important;
-    }
+/* 2. The Isolated Container for React */
+.react-host-container {
+    width: 100%;
+    height: 100%;
 
-    /* THE SCROLLING ENGINE (Blazor Host) */
+    /* Native smooth scrolling */
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+
+    /* Stops scrolling from chaining to the Blazor background on iOS */
+    overscroll-behavior-y: contain;
+}
+
+/* 3. Account for the physical iOS Home Bar natively */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
     .react-host-container {
-        position: fixed !important;
-        inset: 0 !important;
-        z-index: 9999 !important;
-        background: #fff; /* Ensures no background transparency leak */
-
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch;
-
-        /* THE REACH BUFFER: Sufficient clearance for the Safari Toolbar */
-        padding-bottom: 140px !important;
-        box-sizing: border-box !important;
-    }
-
-    /* THE HANDOVER (React Root) */
-    #root {
-        height: auto !important;
-        min-height: 100% !important;
-        /* Secondary safety runway */
-        padding-bottom: 140px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        overflow: visible !important;
-    }
-
-    /* THE SIDEBAR FIX: Grant fixed layers their own independent touch-flow */
-    #root aside,
-    #root div.fixed:not(button),
-    #root div[class*="sidebar"] {
-        position: fixed !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        max-height: 100% !important;
-        height: -webkit-fill-available !important;
-        /* Padding inside the sidebar to ensure the last link is reachable */
-        padding-bottom: 100px !important;
+        padding-bottom: env(safe-area-inset-bottom);
     }
 }
