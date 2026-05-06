@@ -62,3 +62,22 @@ body.project-expanded {
         padding-bottom: env(safe-area-inset-bottom);
     }
 }
+
+@media (pointer: coarse) {
+    /* 
+     * By targeting '.fixed.w-64', we perfectly isolate your Elite FC Sidebar.
+     * The toggle button does not have 'w-64', so it remains completely untouched.
+     */
+    #root .fixed.w-64 {
+        /* 1. Force it to fit above the iOS Safari toolbar */
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+
+        /* 2. Grant independent touch-scroll authority */
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+
+        /* 3. Stop the scroll from leaking to the background */
+        overscroll-behavior: contain !important;
+    }
+}
