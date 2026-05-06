@@ -10,18 +10,13 @@ const preventDefault = (e) => {
 };
 
 window.initialiseReactModule = (entryPath) => {
-    // 1. Purge any existing script tag
     const oldScript = document.getElementById("external-react-entry");
     if (oldScript) oldScript.remove();
 
     const mount = () => {
-        console.log("Zenith-Apex: Handshake Initialised for: " + entryPath);
+        console.log("Zenith-Apex: Establishing Authority for: " + entryPath);
 
-        /* 
-         * STRICT PATH AUTHORITY:
-         * Instead of checking 'if exists', we check which app the path belongs to.
-         * This prevents 'Elite FC' from loading inside the 'Source Auditor' view.
-         */
+        // Context-Aware Handshake
         if (entryPath.includes('elite-fc')) {
             if (typeof window.mountEliteFC === 'function') window.mountEliteFC("root");
         }
@@ -29,17 +24,25 @@ window.initialiseReactModule = (entryPath) => {
             if (typeof window.mountSourceAuditor === 'function') window.mountSourceAuditor("root");
         }
 
+        // ZENITH-APEX GESTURE SYNCHRONISATION
+        // We trigger the lock immediately upon mount to capture the touch-start event.
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        if (isMobile) window.lockMobileBackground();
+        if (isMobile) {
+            window.lockMobileBackground();
+
+            // Background Kick: Forces Safari to recognise the new scrollable height
+            window.requestAnimationFrame(() => {
+                const container = document.querySelector('.react-host-container');
+                if (container) container.scrollTop = 0;
+            });
+        }
     };
 
     const script = document.createElement("script");
-    // Cache-busting is essential here to ensure the script re-runs and sets the window functions
     script.src = `${entryPath}?v=${Date.now()}`;
     script.type = "module";
     script.id = "external-react-entry";
     script.onload = mount;
-
     document.body.appendChild(script);
 };
 

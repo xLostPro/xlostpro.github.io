@@ -28,42 +28,58 @@
     *:focus { outline: none !important; }
 }
 
-/* 
- =============================================================================================
- ZENITH-APEX PRECISION MOBILE VIEWPORT v2.6.0
- =============================================================================================
- RECTIFIED: Modified fixed element selectors to exclude buttons. 
- This prevents the sidebar toggle icon from stretching to fill the page height.
- =============================================================================================
+/*
+=============================================================================================
+ZENITH-APEX CONSOLIDATED VIEWPORT ORCHESTRATION v2.7.0
+=============================================================================================
+RECTIFIED: Restored the mechanical buffer for iOS Safari reach.
+RECTIFIED: Hardened sidebar touch-authority for fixed React overlays.
+=============================================================================================
 */
 
+/* GLOBAL AUTHORITY: Freezes the Blazor background */
+body.project-expanded {
+    overflow: hidden !important;
+}
+
 @media (pointer: coarse) {
+    /* Hard Position Lock for iOS: Stops background rubber-banding */
     body.project-expanded {
         position: fixed !important;
-        overflow: hidden !important;
+        top: 0;
+        left: 0;
         width: 100% !important;
         height: 100% !important;
+        height: 100dvh !important;
     }
 
+    /* THE SCROLLING ENGINE (Blazor Host) */
     .react-host-container {
         position: fixed !important;
         inset: 0 !important;
         z-index: 9999 !important;
-        background: #fff;
+        background: #fff; /* Ensures no background transparency leak */
 
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch;
 
-        /* THE REACH BUFFER */
-        padding-bottom: 120px !important;
+        /* THE REACH BUFFER: Sufficient clearance for the Safari Toolbar */
+        padding-bottom: 140px !important;
         box-sizing: border-box !important;
     }
 
-    /* 
-     * THE SELECTIVE SIDEBAR FIX:
-     * We target the Sidebar Container (aside/div) but EXCLUDE the Toggle Button.
-     * This ensures the menu scrolls correctly without breaking the UI icons.
-     */
+    /* THE HANDOVER (React Root) */
+    #root {
+        height: auto !important;
+        min-height: 100% !important;
+        /* Secondary safety runway */
+        padding-bottom: 140px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: visible !important;
+    }
+
+    /* THE SIDEBAR FIX: Grant fixed layers their own independent touch-flow */
     #root aside,
     #root div.fixed:not(button),
     #root div[class*="sidebar"] {
@@ -71,17 +87,8 @@
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
         max-height: 100% !important;
-
-        /* 
-         * Stretches the container to clear the dynamic Safari toolbar,
-         * but 'not(button)' ensures your toggle stays its original size.
-         */
         height: -webkit-fill-available !important;
-    }
-
-    #root {
-        height: auto !important;
-        min-height: 100% !important;
-        overscroll-behavior: none !important;
+        /* Padding inside the sidebar to ensure the last link is reachable */
+        padding-bottom: 100px !important;
     }
 }
