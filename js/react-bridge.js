@@ -1,29 +1,29 @@
 ﻿/**
- * ZENITH-APEX PURE BRIDGE v3.1.0
- * RECTIFIED: Removed obsolete touch-lock calls to prevent Blazor JSExceptions.
- * Relies entirely on native CSS for layout constraints.
+ * ZENITH-APEX UNIQUE BRIDGE v3.2.0
+ * RECTIFIED: Uses unique namespaces (mount_id) to prevent cross-app contamination.
+ * RECTIFIED: Removed all guess-work path logic.
  */
 
-window.initialiseReactModule = (entryPath) => {
-    // Purge previous script
+window.initialiseReactModule = (entryPath, projectId) => {
+    // 1. Clean up any previous script tag
     const oldScript = document.getElementById("external-react-entry");
     if (oldScript) oldScript.remove();
 
     const mount = () => {
-        console.log("Zenith-Apex: Hydrating " + entryPath);
+        // Construct the unique function name (e.g., mount_omnilog)
+        const uniqueMountFunction = `mount_${projectId.replace(/-/g, '_')}`;
 
-        if (entryPath.includes('elite-fc') && typeof window.mountEliteFC === 'function') {
-            window.mountEliteFC("root");
-        }
-        else if (entryPath.includes('source-auditor') && typeof window.mountSourceAuditor === 'function') {
-            window.mountSourceAuditor("root");
-        }
-        else if (entryPath.includes('omnilog') && typeof window.mountOmniLog === 'function') {
-            window.mountOmniLog("root");
+        console.log(`Zenith-Apex: Attempting unique handshake: ${uniqueMountFunction}`);
+
+        if (typeof window[uniqueMountFunction] === 'function') {
+            window[uniqueMountFunction]("root");
+        } else {
+            console.error(`❌ Handshake Failed: ${uniqueMountFunction} not found in ${entryPath}`);
         }
     };
 
     const script = document.createElement("script");
+    // Cache-busting ensures the browser always executes the latest code
     script.src = `${entryPath}?v=${Date.now()}`;
     script.type = "module";
     script.id = "external-react-entry";
@@ -32,23 +32,12 @@ window.initialiseReactModule = (entryPath) => {
 };
 
 window.terminateReactModule = () => {
-    console.log("Zenith-Apex: Purging React Environment...");
+    // Construct purge logic for all potential apps
+    ["elite_fc_manager", "source_auditor", "omnilog"].forEach(id => {
+        const unmountFn = `unmount_${id}`;
+        if (typeof window[unmountFn] === 'function') window[unmountFn]();
+    });
 
-    // 1. Safely unmount active React trees
-    if (typeof window.unmountEliteFC === 'function') window.unmountEliteFC();
-    if (typeof window.unmountSourceAuditor === 'function') window.unmountSourceAuditor();
-    if (typeof window.unmountOmniLog === 'function') window.unmountOmniLog();
-
-    // 2. Remove script tag
     const script = document.getElementById("external-react-entry");
     if (script) script.remove();
-
-    // 3. Nullify functions to enforce strict handshakes on next load
-    window.mountEliteFC = null;
-    window.mountSourceAuditor = null;
-    window.mountOmniLog = null;
-
-    window.unmountEliteFC = null;
-    window.unmountSourceAuditor = null;
-    window.unmountOmniLog = null;
 };
