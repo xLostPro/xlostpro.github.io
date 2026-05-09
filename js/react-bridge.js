@@ -1,38 +1,41 @@
 ﻿/**
- * ZENITH-APEX UNIQUE BRIDGE v3.2.0
- * RECTIFIED: Uses unique namespaces (mount_id) to prevent cross-app contamination.
- * RECTIFIED: Removed all guess-work path logic.
+ * ZENITH-APEX RETRY-AWARE BRIDGE v3.3.0
+ * RECTIFIED: Implemented polling to wait for ES Module evaluation.
+ * RECTIFIED: Uses unique namespacing to prevent cross-app contamination.
  */
 
 window.initialiseReactModule = (entryPath, projectId) => {
-    // 1. Clean up any previous script tag
     const oldScript = document.getElementById("external-react-entry");
     if (oldScript) oldScript.remove();
 
-    const mount = () => {
-        // Construct the unique function name (e.g., mount_omnilog)
-        const uniqueMountFunction = `mount_${projectId.replace(/-/g, '_')}`;
-
-        console.log(`Zenith-Apex: Attempting unique handshake: ${uniqueMountFunction}`);
-
-        if (typeof window[uniqueMountFunction] === 'function') {
-            window[uniqueMountFunction]("root");
-        } else {
-            console.error(`❌ Handshake Failed: ${uniqueMountFunction} not found in ${entryPath}`);
-        }
-    };
-
     const script = document.createElement("script");
-    // Cache-busting ensures the browser always executes the latest code
     script.src = `${entryPath}?v=${Date.now()}`;
     script.type = "module";
     script.id = "external-react-entry";
-    script.onload = mount;
+
+    script.onload = () => {
+        const uniqueMountFunction = `mount_${projectId.replace(/-/g, '_')}`;
+        let attempts = 0;
+
+        // POLLING LOOP: Wait for the module to attach the function to window
+        const mountPoll = setInterval(() => {
+            attempts++;
+            if (typeof window[uniqueMountFunction] === 'function') {
+                clearInterval(mountPoll);
+                window[uniqueMountFunction]("root");
+                console.log(`✅ Handshake Success: ${uniqueMountFunction} initialised.`);
+            } else if (attempts > 50) { // Timeout after 500ms (50 * 10ms)
+                clearInterval(mountPoll);
+                console.error(`❌ Handshake Failed: ${uniqueMountFunction} not found after 500ms.`);
+            }
+        }, 10);
+    };
+
     document.body.appendChild(script);
 };
 
 window.terminateReactModule = () => {
-    // Construct purge logic for all potential apps
+    // Purge every possible project unmount function
     ["elite_fc_manager", "source_auditor", "omnilog"].forEach(id => {
         const unmountFn = `unmount_${id}`;
         if (typeof window[unmountFn] === 'function') window[unmountFn]();
