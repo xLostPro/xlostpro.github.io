@@ -1,4 +1,4 @@
-import{d as p,u as de,r as l,a as ce,j as e,X as Y,s as h,t as u,S as V}from"./index.js";import{P as X,I as J,a as me}from"./backlogService.js";import{fetchCompletionTime as xe,fetchRetroAchievementsProgress as ge,fetchRetroAchievementsGameDetails as he}from"./api.js";import{C as k,g as pe,a as ue}from"./metadataService.js";import{c as be}from"./utils.js";import{F as fe}from"./FormattedReview.js";import{T as S}from"./trophy.js";import{C as Q}from"./clock.js";import{T as we}from"./tv.js";import{L as I}from"./loader-circle.js";/**
+import{c as p,u as de,r as l,a as ce,j as e,X as Y,s as h,t as u,S as V}from"./index.js";import{P as X,I as J,a as me}from"./backlogService.js";import{fetchCompletionTime as xe,fetchRetroAchievementsProgress as ge,fetchRetroAchievementsGameDetails as he}from"./api.js";import{C as k,g as pe,a as ue}from"./metadataService.js";import{c as be}from"./utils.js";import{F as fe}from"./FormattedReview.js";import{T as S}from"./trophy.js";import{C as Q}from"./clock.js";import{T as we}from"./tv.js";import{L as I}from"./loader-circle.js";/**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.

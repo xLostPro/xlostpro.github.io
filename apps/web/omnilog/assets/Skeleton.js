@@ -1,4 +1,4 @@
-import{d as i,u as $,r,R as P,a as z,j as e,X as A,t as f}from"./index.js";import{u as U}from"./backlogService.js";import{g as D}from"./utils.js";import{g as V}from"./metadataService.js";import{S as W}from"./MediaDetailModal.js";import{L as G}from"./loader-circle.js";import{W as q}from"./wand-sparkles.js";/**
+import{c as i,u as $,r,R as P,a as z,j as e,X as A,t as f}from"./index.js";import{u as U}from"./backlogService.js";import{g as D}from"./utils.js";import{g as V}from"./metadataService.js";import{S as W}from"./MediaDetailModal.js";import{L as G}from"./loader-circle.js";import{W as q}from"./wand-sparkles.js";/**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.

@@ -1,4 +1,4 @@
-import{d as M,u as Z,r as d,s as o,j as s,U as p,b as T,c as v,f as B,t as I}from"./index.js";import{A as Y}from"./AutoCover.js";import{F as J}from"./FormattedReview.js";import{L as K}from"./loader-circle.js";import{U as $,Z as Q}from"./zap.js";import"./api.js";/**
+import{c as M,u as Z,r as d,s as o,j as s,U as p,b as T,d as v,f as B,t as I}from"./index.js";import{A as Y}from"./AutoCover.js";import{F as J}from"./FormattedReview.js";import{L as K}from"./loader-circle.js";import{U as $,Z as Q}from"./zap.js";import"./api.js";/**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.

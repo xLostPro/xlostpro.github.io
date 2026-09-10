@@ -1,4 +1,4 @@
-import{d as i,s}from"./index.js";import{fetchCollectionForMedia as n}from"./api.js";/**
+import{c as i,s}from"./index.js";import{fetchCollectionForMedia as n}from"./api.js";/**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
