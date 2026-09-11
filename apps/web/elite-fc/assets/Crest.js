@@ -1,4 +1,4 @@
-import{d as r,j as e,l as y,S as w,T as u}from"./index.js";import{A as L}from"./award.js";/**
+import{d as r,j as e,o as y,S as w,T as u}from"./index.js";import{A as L}from"./award.js";/**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
