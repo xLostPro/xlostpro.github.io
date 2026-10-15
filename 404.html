@@ -74,12 +74,16 @@
     };
 
     // ESCAPE KEY HUB
-    let escHandler;
+    let escHandler = null;
     window.setupEscapeKey = (dotNetHelper) => {
+        window.cleanupEscapeKey();
         escHandler = (e) => { if (e.key === 'Escape') dotNetHelper.invokeMethodAsync('CloseFullscreen'); };
         window.addEventListener('keydown', escHandler);
     };
-    window.cleanupEscapeKey = () => window.removeEventListener('keydown', escHandler);
+    window.cleanupEscapeKey = () => {
+        if (escHandler) window.removeEventListener('keydown', escHandler);
+        escHandler = null;
+    };
 </script>
 <noscript>xLostPro requires JavaScript to display its interactive project archive.</noscript>
 </body>
